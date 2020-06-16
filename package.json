@@ -1,0 +1,26 @@
+{
+  "name": "vcoin-contracts",
+  "version": "1.0.0",
+  "description": "ERC20 contract owned by multisig wallet",
+  "main": "index.js",
+  "scripts": {
+    "eth": "etherlime ganache",
+    "test": "etherlime test ./tests --skip-compilation",
+    "compile": "etherlime compile",
+    "deploy": "node ./deployment/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LimeChain/VCoin-Contracts.git"
+  },
+  "author": "LimeChain",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LimeChain/VCoin-Contracts/issues"
+  },
+  "homepage": "https://github.com/LimeChain/VCoin-Contracts#readme",
+  "dependencies": {
+    "@openzeppelin/contracts": "^3.0.2",
+    "etherlime-lib": "^1.2.3"
+  }
+}

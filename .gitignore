@@ -1,0 +1,11 @@
+# Dependencies
+node_modules
+
+# Etherlime files
+.etherlime-store
+
+# IDE files
+.DS_Store
+
+# Contracts build
+build
