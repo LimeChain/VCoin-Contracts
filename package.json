@@ -6,8 +6,8 @@
   "scripts": {
     "eth": "etherlime ganache",
     "test": "etherlime test ./tests --skip-compilation",
-    "compile": "etherlime compile",
-    "deploy": "node ./deployment/*"
+    "compile": "echo 'Compiling Wallet' && etherlime compile --workingDirectory contracts/wallet --solcVersion 0.4.15 && echo 'Compiling Token' && etherlime compile --workingDirectory contracts/token",
+    "deploy": "etherlime deploy --file ./deployment/ --compile false"
   },
   "repository": {
     "type": "git",
