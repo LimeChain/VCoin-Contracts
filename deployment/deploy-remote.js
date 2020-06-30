@@ -1,3 +1,4 @@
+require('dotenv').config({ path: __dirname + '/.env' });
 const etherlime = require('etherlime-lib');
 
 const chalk = require('chalk');
@@ -11,8 +12,8 @@ const deploy = async () => {
     const deployer = await obtainDeployer();
     const OWNERS = await loadOwners(deployer);
 
-    const tokenContract = await deployer.deploy(VCoin);
-    const walletContract = await deployer.deploy(MultiSigWallet, {}, OWNERS, process.env.CONFIRMATIONS);
+    const tokenContract = await deployer.deployAndVerify("etherscan", VCoin);
+    const walletContract = await deployer.deployAndVerify("etherscan", MultiSigWallet, {}, OWNERS, process.env.CONFIRMATIONS);
 
     console.log(chalk.greenBright('Token contract address: '), tokenContract.contractAddress);
     console.log(chalk.greenBright('Wallet contract address: '), walletContract.contractAddress);
@@ -41,12 +42,23 @@ const obtainDeployer = async function () {
         message: `Enter deployer private key`
     });
 
-    if (process.env.NETWORK == 'local' || !process.env.NETWORK) {
-        return new etherlime.EtherlimeGanacheDeployer(privateKey.value, 8545, '')
+    if (!process.env.NETWORK) {
+        throw new Error("No network environment variable supplied")
     }
 
-    const INFURA_PROVIDER = '14ac2dd6bdcb485bb22ed4aa76d681ae'
-    return new etherlime.InfuraPrivateKeyDeployer(privateKey.value, process.env.NETWORK, INFURA_PROVIDER)
+    if (!process.env.INFURA_PROVIDER) {
+        throw new Error("No infura key environment variable supplied")
+    }
+
+    if (!process.env.ETHERSCAN_KEY) {
+        throw new Error("No etherscan key environment variable supplied")
+    }
+
+    const INFURA_PROVIDER = process.env.INFURA_PROVIDER
+    const ETHERSCAN_KEY = process.env.ETHERSCAN_KEY
+    const deployer = new etherlime.InfuraPrivateKeyDeployer(privateKey.value, process.env.NETWORK, INFURA_PROVIDER)
+    deployer.setVerifierApiKey(ETHERSCAN_KEY)
+    return deployer
 }
 
 const loadOwners = async function (deployer) {
@@ -68,4 +80,4 @@ const loadOwners = async function (deployer) {
 }
 
 
-module.exports = deploy
+module.exports = {deploy}
