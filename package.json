@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "eth": "etherlime ganache",
-    "compile": "echo 'Compiling Wallet' && etherlime compile --workingDirectory contracts/wallet --solcVersion 0.4.15 && echo 'Compiling Token' && etherlime compile --workingDirectory contracts/token",
-    "deploy": "node ./deployment/"
+    "compile": "echo 'Compiling Wallet' && etherlime compile --workingDirectory contracts/wallet --solcVersion 0.4.15 && echo 'Compiling Token' && etherlime compile --workingDirectory contracts/token  --solcVersion 0.6.10",
+    "deploy-local": "etherlime deploy ./deployment/deploy-local.js --compile=false",
+    "deploy-remote": "etherlime deploy ./deployment/deploy-remote.js --compile=false"
   },
   "repository": {
     "type": "git",

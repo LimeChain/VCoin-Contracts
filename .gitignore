@@ -9,3 +9,5 @@ node_modules
 
 # Contracts build
 build
+
+.env
