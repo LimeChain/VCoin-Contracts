@@ -22,15 +22,24 @@ const deploy = async () => {
     /* -------------------------------------------------------  */
     /* -------------------------------------------------------  */
     process.stdout.write('\nPreparing contracts...\r');
+
     const minterRole = await tokenContract.MINTER_ROLE();
+    const pauserRole = await tokenContract.PAUSER_ROLE();
 
-    // Assign minter role to wallet
-    const grantRoleTx = await tokenContract.grantRole(minterRole, walletContract.contractAddress);
-    await deployer.provider.waitForTransaction(grantRoleTx.hash);
+    // Assign minter and pauser role to wallet
+    const grantMinterRoleTx = await tokenContract.grantRole(minterRole, walletContract.contractAddress);
+    const grantPauserRoleTx = await tokenContract.grantRole(pauserRole, walletContract.contractAddress);
 
-    // Revoke deployer direct access to minting
+    await deployer.provider.waitForTransaction(grantMinterRoleTx.hash);
+    await deployer.provider.waitForTransaction(grantPauserRoleTx.hash);
+
+
+    // Revoke deployer direct access to minting and pausing
     const revokeMinterTx = await tokenContract.revokeRole(minterRole, OWNERS[0]);
+    const revokePauserTx = await tokenContract.revokeRole(pauserRole, OWNERS[0]);
+
     await deployer.provider.waitForTransaction(revokeMinterTx.hash);
+    await deployer.provider.waitForTransaction(revokePauserTx.hash);
 
     process.stdout.write(chalk.greenBright('Contracts are ready to be used\n'));
 }
@@ -80,4 +89,4 @@ const loadOwners = async function (deployer) {
 }
 
 
-module.exports = {deploy}
+module.exports = { deploy }
